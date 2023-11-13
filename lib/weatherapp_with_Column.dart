@@ -8,7 +8,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final WeatherData weatherData;
-  MyApp(this.weatherData);
+  const MyApp(this.weatherData);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

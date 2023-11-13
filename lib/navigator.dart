@@ -2,13 +2,13 @@ import "package:flutter/material.dart";
 
 void main(){
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 
 class MyApp extends StatelessWidget {
 
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       initialRoute: "/",
       routes:{
         "/":(context) => Homescreen(),
-        "/detailsScreen":(context) => DetailsScreen(),
+        "/detailsScreen":(context) => const DetailsScreen(),
       },
     );
   }
@@ -59,18 +59,18 @@ class DetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("DetailsScreen"),
+        title: const Text("DetailsScreen"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Produkt:"),
+            const Text("Produkt:"),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text("Zrück zum Homescreen"),
+              child: const Text("Zrück zum Homescreen"),
             )
           ],
         ),
