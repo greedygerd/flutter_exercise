@@ -1,62 +1,95 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'dart:typed_data';
-import 'package:flutter/services.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Bilddaten auslesen'),
-        ),
-        body: Center(
-          child: FutureBuilder(
-            future: readImageData('assets/images/jancontainer.png'), // Pfad zu deinem Bild
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  // Fehlerbehandlung
-                  return Text('Fehler beim Lesen der Bilddaten: ${snapshot.error}');
-                }
+      title: 'My Flutter App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: SplashScreen(),
+    );
+  }
+}
 
-                Uint8List? imageData = snapshot.data as Uint8List?;
-                
-                if (imageData != null) {
-                  // Bild anzeigen, wenn Daten vorhanden sind
-                  return Image.memory(imageData);
-                } else {
-                  // Fehlermeldung anzeigen, wenn die Daten null sind
-                  return Text('Ungültiges Bildformat');
-                }
-              } else {
-                // Ladeindikator anzeigen
-                return CircularProgressIndicator();
-              }
-            },
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  bool _isVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Startet die Animation nach einer Verzögerung von 2 Sekunden
+    Timer(Duration(seconds: 2), () {
+      setState(() {
+        _isVisible = true;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Hintergrund des Splashscreens
+          Container(
+            color: Colors.white,
+            child: Center(
+              child: FlutterLogo(size: 200),
+            ),
           ),
-        ),
+          // Animierter roter Container mit InkWell
+          AnimatedPositioned(
+            duration: Duration(seconds: 1),
+            curve: Curves.easeInOut,
+            left: _isVisible ? MediaQuery.of(context).size.width / 4 : 0,
+            top: _isVisible ? MediaQuery.of(context).size.height / 4 : 0,
+            child: InkWell(
+              onTap: () {
+                // Navigiert zur nächsten Seite
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => NextPage()),
+                );
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width / 2,
+                height: MediaQuery.of(context).size.height / 2,
+                color: Colors.red,
+                child: Center(
+                  child: Text(
+                    'Tap me!',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
+}
 
-  Future<Uint8List> readImageData(String imagePath) async {
-    try {
-      // Lese die binären Daten des Bildes
-      ByteData data = await rootBundle.load(imagePath);
-      
-      // Extrahiere die Bytes und erstelle eine Uint8List
-      Uint8List imageData = data.buffer.asUint8List();
-      
-      return imageData;
-    } catch (e) {
-      // Fehler beim Lesen der Daten
-      print('Fehler beim Lesen der Bilddaten: $e');
-      throw e;
-    }
+class NextPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Next Page'),
+      ),
+      body: Center(
+        child: Text('This is the next page!'),
+      ),
+    );
   }
 }
